@@ -21,7 +21,7 @@ services:
     volumes:
       # Dados persistentes
       - mysql_data:/var/lib/mysql
-      # Scripts de inicialização (opcional, ver seção 4)
+      # Scripts de inicialização
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD}"]

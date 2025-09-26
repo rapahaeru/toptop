@@ -1,31 +1,47 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string()
+          .valid('development', 'test', 'production')
+          .default('development'),
+        API_PORT: Joi.number().default(3000),
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.number().default(3306),
+        DB_NAME: Joi.string().required(),
+        DB_USER: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        DB_CHARSET: Joi.string().default('utf8mb4'),
+        DB_COLLATION: Joi.string().default('utf8mb4_unicode_ci'),
+      }),
+    }),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
         type: 'mysql',
-        host: process.env.DB_HOST,
-        port: Number(process.env.DB_PORT || 3306),
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        synchronize: false,
-        logging: process.env.NODE_ENV !== 'production',
-        // UTF-8
-        charset: process.env.DB_CHARSET || 'utf8mb4',
-        // opções extras do driver mysql2
+        host: String(config.get('DB_HOST')),
+        port: Number(config.get('DB_PORT')),
+        username: String(config.get('DB_USER')),
+        password: String(config.get('DB_PASSWORD')),
+        database: String(config.get('DB_NAME')),
+        autoLoadEntities: true, // só mapeia entidades se você criar alguma
+        synchronize: false, // mantenha o schema via SQL externo / Flyway / etc.
+        charset: String(config.get('DB_CHARSET')),
         extra: {
-          // manter conexão saudável e evitar timeouts em idle
           connectTimeout: 10000,
           decimalNumbers: true,
         },
+        logging: config.get('NODE_ENV') !== 'production',
       }),
     }),
     HealthModule,

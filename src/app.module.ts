@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthModule } from './health/health.module';
+import { ConstellationsModule } from './constellations/constellations.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { HealthModule } from './health/health.module';
       }),
     }),
     HealthModule,
+    ConstellationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

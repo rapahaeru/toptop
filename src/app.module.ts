@@ -4,8 +4,17 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AnimationDirectorsModule } from './animation-directors/animation-directors.module';
+import { BroadcastersModule } from './broadcasters/broadcasters.module';
+import { DirectorsModule } from './directors/directors.module';
+import { EpisodesModule } from './episodes/episodes.module';
+import { GenresModule } from './genres/genres.module';
 import { HealthModule } from './health/health.module';
-import { ConstellationsModule } from './constellations/constellations.module';
+import { ProducersModule } from './producers/producers.module';
+import { ProductionStudiosModule } from './production-studios/production-studios.module';
+import { ScriptsModule } from './scripts/scripts.module';
+import { SeriesModule } from './series/series.module';
+import { StoryboardsModule } from './storyboards/storyboards.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -36,8 +45,8 @@ import { UsersModule } from './users/users.module';
         username: String(config.get('DB_USER')),
         password: String(config.get('DB_PASSWORD')),
         database: String(config.get('DB_NAME')),
-        autoLoadEntities: true, // só mapeia entidades se você criar alguma
-        synchronize: false, // mantenha o schema via SQL externo / Flyway / etc.
+        autoLoadEntities: true,
+        synchronize: false,
         charset: String(config.get('DB_CHARSET')),
         extra: {
           connectTimeout: 10000,
@@ -47,8 +56,17 @@ import { UsersModule } from './users/users.module';
       }),
     }),
     HealthModule,
-    ConstellationsModule,
     UsersModule,
+    DirectorsModule,
+    GenresModule,
+    ProductionStudiosModule,
+    ProducersModule,
+    BroadcastersModule,
+    AnimationDirectorsModule,
+    ScriptsModule,
+    StoryboardsModule,
+    SeriesModule,
+    EpisodesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

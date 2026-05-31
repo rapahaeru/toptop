@@ -1,15 +1,17 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ConstellationsService } from './constellations.service';
+import { ListConstellationsDTO } from './dto/list-constellations.dto';
 
 @Controller('constellations')
 export class ConstellationsController {
   constructor(private readonly service: ConstellationsService) {}
 
   @Get()
-  list(@Query('limit') limit?: string, @Query('offset') offset?: string) {
-    const l = Number(limit ?? 50);
-    const o = Number(offset ?? 0);
-    return this.service.list(l, o);
+  list(@Query() query: ListConstellationsDTO) {
+    return this.service.list(
+      Number(query.limit) || 50,
+      Number(query.offset) || 0,
+    );
   }
 
   @Get('search')

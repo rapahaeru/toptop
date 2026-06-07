@@ -15,7 +15,9 @@ const mockRepository = {
 
 const mockDate = new Date('2024-01-01');
 
-const makeProductionStudio = (overrides: Partial<ProductionStudio> = {}): ProductionStudio =>
+const makeProductionStudio = (
+  overrides: Partial<ProductionStudio> = {},
+): ProductionStudio =>
   ({
     id: 1,
     name: 'Toei Animation',
@@ -36,12 +38,17 @@ describe('ProductionStudiosService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductionStudiosService,
-        { provide: getRepositoryToken(ProductionStudio), useValue: mockRepository },
+        {
+          provide: getRepositoryToken(ProductionStudio),
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
     service = module.get<ProductionStudiosService>(ProductionStudiosService);
-    repo = module.get<Repository<ProductionStudio>>(getRepositoryToken(ProductionStudio));
+    repo = module.get<Repository<ProductionStudio>>(
+      getRepositoryToken(ProductionStudio),
+    );
   });
 
   it('should be defined', () => {
@@ -56,7 +63,11 @@ describe('ProductionStudiosService', () => {
       const result = await service.list();
 
       expect(result).toEqual(mockData);
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 50, skip: 0, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 50,
+        skip: 0,
+        order: { name: 'ASC' },
+      });
     });
 
     it('should respect custom limit and offset', async () => {
@@ -64,7 +75,11 @@ describe('ProductionStudiosService', () => {
 
       await service.list(5, 10);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 5, skip: 10, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 5,
+        skip: 10,
+        order: { name: 'ASC' },
+      });
     });
   });
 
@@ -97,7 +112,11 @@ describe('ProductionStudiosService', () => {
       const result = await service.create(dto);
 
       expect(mockRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({ name: dto.name, createdBy: { id: 1 }, updatedBy: { id: 1 } }),
+        expect.objectContaining({
+          name: dto.name,
+          createdBy: { id: 1 },
+          updatedBy: { id: 1 },
+        }),
       );
       expect(result).toEqual(built);
     });

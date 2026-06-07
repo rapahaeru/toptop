@@ -1,4 +1,11 @@
-import { IsDateString, IsInt, IsOptional, IsPositive, IsString, MaxLength } from 'class-validator';
+import {
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsPositive,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateEpisodeDto {

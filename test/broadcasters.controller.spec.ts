@@ -58,7 +58,11 @@ describe('BroadcastersController', () => {
       const result = await controller.list(undefined, undefined);
 
       expect(result).toEqual(mockData);
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 50, skip: 0, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 50,
+        skip: 0,
+        order: { name: 'ASC' },
+      });
     });
 
     it('should pass limit and offset to service', async () => {
@@ -66,7 +70,11 @@ describe('BroadcastersController', () => {
 
       await controller.list('5', '10');
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 5, skip: 10, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 5,
+        skip: 10,
+        order: { name: 'ASC' },
+      });
     });
   });
 

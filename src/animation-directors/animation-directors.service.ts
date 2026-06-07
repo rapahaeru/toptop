@@ -13,7 +13,11 @@ export class AnimationDirectorsService {
   ) {}
 
   list(limit = 50, offset = 0) {
-    return this.repo.find({ take: limit, skip: offset, order: { name: 'ASC' } });
+    return this.repo.find({
+      take: limit,
+      skip: offset,
+      order: { name: 'ASC' },
+    });
   }
 
   findById(id: number) {
@@ -22,7 +26,11 @@ export class AnimationDirectorsService {
 
   create(dto: CreateAnimationDirectorDto, userId = 1) {
     const user = { id: userId } as User;
-    const entity = this.repo.create({ ...dto, createdBy: user, updatedBy: user });
+    const entity = this.repo.create({
+      ...dto,
+      createdBy: user,
+      updatedBy: user,
+    });
     return this.repo.save(entity);
   }
 }

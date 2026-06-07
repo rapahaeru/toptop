@@ -69,7 +69,13 @@ describe('SeriesService', () => {
         take: 50,
         skip: 0,
         order: { name: 'ASC' },
-        relations: ['director', 'genre', 'productionStudio', 'broadcaster', 'producer'],
+        relations: [
+          'director',
+          'genre',
+          'productionStudio',
+          'broadcaster',
+          'producer',
+        ],
       });
     });
 
@@ -94,7 +100,15 @@ describe('SeriesService', () => {
       expect(result).toEqual(mockData);
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { id: 1 },
-        relations: ['director', 'genre', 'productionStudio', 'broadcaster', 'producer', 'createdBy', 'updatedBy'],
+        relations: [
+          'director',
+          'genre',
+          'productionStudio',
+          'broadcaster',
+          'producer',
+          'createdBy',
+          'updatedBy',
+        ],
       });
     });
 
@@ -160,14 +174,20 @@ describe('SeriesService', () => {
     });
 
     it('should set releaseStartDate and releaseEndDate to undefined when absent', async () => {
-      const built = makeSeries({ releaseStartDate: undefined, releaseEndDate: undefined });
+      const built = makeSeries({
+        releaseStartDate: undefined,
+        releaseEndDate: undefined,
+      });
       jest.spyOn(repo, 'create').mockReturnValue(built);
       jest.spyOn(repo, 'save').mockResolvedValueOnce(built);
 
       await service.create(baseDto);
 
       expect(mockRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({ releaseStartDate: undefined, releaseEndDate: undefined }),
+        expect.objectContaining({
+          releaseStartDate: undefined,
+          releaseEndDate: undefined,
+        }),
       );
     });
 

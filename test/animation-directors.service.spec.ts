@@ -15,7 +15,9 @@ const mockRepository = {
 
 const mockDate = new Date('2024-01-01');
 
-const makeAnimationDirector = (overrides: Partial<AnimationDirector> = {}): AnimationDirector =>
+const makeAnimationDirector = (
+  overrides: Partial<AnimationDirector> = {},
+): AnimationDirector =>
   ({
     id: 1,
     name: 'Shingo Araki',
@@ -36,12 +38,17 @@ describe('AnimationDirectorsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AnimationDirectorsService,
-        { provide: getRepositoryToken(AnimationDirector), useValue: mockRepository },
+        {
+          provide: getRepositoryToken(AnimationDirector),
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
     service = module.get<AnimationDirectorsService>(AnimationDirectorsService);
-    repo = module.get<Repository<AnimationDirector>>(getRepositoryToken(AnimationDirector));
+    repo = module.get<Repository<AnimationDirector>>(
+      getRepositoryToken(AnimationDirector),
+    );
   });
 
   it('should be defined', () => {
@@ -56,7 +63,11 @@ describe('AnimationDirectorsService', () => {
       const result = await service.list();
 
       expect(result).toEqual(mockData);
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 50, skip: 0, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 50,
+        skip: 0,
+        order: { name: 'ASC' },
+      });
     });
 
     it('should respect custom limit and offset', async () => {
@@ -64,7 +75,11 @@ describe('AnimationDirectorsService', () => {
 
       await service.list(5, 10);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 5, skip: 10, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 5,
+        skip: 10,
+        order: { name: 'ASC' },
+      });
     });
   });
 
@@ -97,7 +112,11 @@ describe('AnimationDirectorsService', () => {
       const result = await service.create(dto);
 
       expect(mockRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({ name: dto.name, createdBy: { id: 1 }, updatedBy: { id: 1 } }),
+        expect.objectContaining({
+          name: dto.name,
+          createdBy: { id: 1 },
+          updatedBy: { id: 1 },
+        }),
       );
       expect(result).toEqual(built);
     });

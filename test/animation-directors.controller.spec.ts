@@ -16,7 +16,9 @@ const mockRepository = {
 
 const mockDate = new Date('2024-01-01');
 
-const makeAnimationDirector = (overrides: Partial<AnimationDirector> = {}): AnimationDirector =>
+const makeAnimationDirector = (
+  overrides: Partial<AnimationDirector> = {},
+): AnimationDirector =>
   ({
     id: 1,
     name: 'Shingo Araki',
@@ -38,12 +40,19 @@ describe('AnimationDirectorsController', () => {
       controllers: [AnimationDirectorsController],
       providers: [
         AnimationDirectorsService,
-        { provide: getRepositoryToken(AnimationDirector), useValue: mockRepository },
+        {
+          provide: getRepositoryToken(AnimationDirector),
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
-    controller = module.get<AnimationDirectorsController>(AnimationDirectorsController);
-    repo = module.get<Repository<AnimationDirector>>(getRepositoryToken(AnimationDirector));
+    controller = module.get<AnimationDirectorsController>(
+      AnimationDirectorsController,
+    );
+    repo = module.get<Repository<AnimationDirector>>(
+      getRepositoryToken(AnimationDirector),
+    );
   });
 
   it('should be defined', () => {
@@ -58,7 +67,11 @@ describe('AnimationDirectorsController', () => {
       const result = await controller.list(undefined, undefined);
 
       expect(result).toEqual(mockData);
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 50, skip: 0, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 50,
+        skip: 0,
+        order: { name: 'ASC' },
+      });
     });
 
     it('should pass limit and offset to service', async () => {
@@ -66,7 +79,11 @@ describe('AnimationDirectorsController', () => {
 
       await controller.list('5', '10');
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 5, skip: 10, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 5,
+        skip: 10,
+        order: { name: 'ASC' },
+      });
     });
   });
 

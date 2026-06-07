@@ -29,7 +29,14 @@ export class EpisodesService {
   findById(id: number) {
     return this.repo.findOne({
       where: { id },
-      relations: ['series', 'animationDirector', 'script', 'storyboard', 'createdBy', 'updatedBy'],
+      relations: [
+        'series',
+        'animationDirector',
+        'script',
+        'storyboard',
+        'createdBy',
+        'updatedBy',
+      ],
     });
   }
 
@@ -37,7 +44,9 @@ export class EpisodesService {
     const user = { id: userId } as User;
     const entity = this.repo.create({
       title: dto.title,
-      broadcastedDate: dto.broadcastedDate ? new Date(dto.broadcastedDate) : undefined,
+      broadcastedDate: dto.broadcastedDate
+        ? new Date(dto.broadcastedDate)
+        : undefined,
       series: { id: dto.seriesId } as Series,
       animationDirector: { id: dto.animationDirectorId } as AnimationDirector,
       script: { id: dto.scriptId } as Script,

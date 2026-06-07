@@ -56,7 +56,11 @@ describe('DirectorsService', () => {
       const result = await service.list();
 
       expect(result).toEqual(mockData);
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 50, skip: 0, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 50,
+        skip: 0,
+        order: { name: 'ASC' },
+      });
     });
 
     it('should respect custom limit and offset', async () => {
@@ -64,7 +68,11 @@ describe('DirectorsService', () => {
 
       await service.list(10, 20);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 10, skip: 20, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 10,
+        skip: 20,
+        order: { name: 'ASC' },
+      });
     });
   });
 
@@ -97,7 +105,11 @@ describe('DirectorsService', () => {
       const result = await service.create(dto);
 
       expect(mockRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({ name: dto.name, createdBy: { id: 1 }, updatedBy: { id: 1 } }),
+        expect.objectContaining({
+          name: dto.name,
+          createdBy: { id: 1 },
+          updatedBy: { id: 1 },
+        }),
       );
       expect(mockRepository.save).toHaveBeenCalledWith(built);
       expect(result).toEqual(built);

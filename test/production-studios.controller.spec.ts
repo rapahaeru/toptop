@@ -16,7 +16,9 @@ const mockRepository = {
 
 const mockDate = new Date('2024-01-01');
 
-const makeProductionStudio = (overrides: Partial<ProductionStudio> = {}): ProductionStudio =>
+const makeProductionStudio = (
+  overrides: Partial<ProductionStudio> = {},
+): ProductionStudio =>
   ({
     id: 1,
     name: 'Toei Animation',
@@ -38,12 +40,19 @@ describe('ProductionStudiosController', () => {
       controllers: [ProductionStudiosController],
       providers: [
         ProductionStudiosService,
-        { provide: getRepositoryToken(ProductionStudio), useValue: mockRepository },
+        {
+          provide: getRepositoryToken(ProductionStudio),
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
-    controller = module.get<ProductionStudiosController>(ProductionStudiosController);
-    repo = module.get<Repository<ProductionStudio>>(getRepositoryToken(ProductionStudio));
+    controller = module.get<ProductionStudiosController>(
+      ProductionStudiosController,
+    );
+    repo = module.get<Repository<ProductionStudio>>(
+      getRepositoryToken(ProductionStudio),
+    );
   });
 
   it('should be defined', () => {
@@ -58,7 +67,11 @@ describe('ProductionStudiosController', () => {
       const result = await controller.list(undefined, undefined);
 
       expect(result).toEqual(mockData);
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 50, skip: 0, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 50,
+        skip: 0,
+        order: { name: 'ASC' },
+      });
     });
 
     it('should pass limit and offset to service', async () => {
@@ -66,7 +79,11 @@ describe('ProductionStudiosController', () => {
 
       await controller.list('5', '10');
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ take: 5, skip: 10, order: { name: 'ASC' } });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        take: 5,
+        skip: 10,
+        order: { name: 'ASC' },
+      });
     });
   });
 

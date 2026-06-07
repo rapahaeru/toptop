@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AnimationDirector } from '../entities/animation-director.entity';
 import { Broadcaster } from '../entities/broadcaster.entity';
 import { Director } from '../entities/director.entity';
 import { Genre } from '../entities/genre.entity';
@@ -23,14 +22,28 @@ export class SeriesService {
       take: limit,
       skip: offset,
       order: { name: 'ASC' },
-      relations: ['director', 'genre', 'productionStudio', 'broadcaster', 'producer'],
+      relations: [
+        'director',
+        'genre',
+        'productionStudio',
+        'broadcaster',
+        'producer',
+      ],
     });
   }
 
   findById(id: number) {
     return this.repo.findOne({
       where: { id },
-      relations: ['director', 'genre', 'productionStudio', 'broadcaster', 'producer', 'createdBy', 'updatedBy'],
+      relations: [
+        'director',
+        'genre',
+        'productionStudio',
+        'broadcaster',
+        'producer',
+        'createdBy',
+        'updatedBy',
+      ],
     });
   }
 
@@ -39,8 +52,12 @@ export class SeriesService {
     const entity = this.repo.create({
       name: dto.name,
       releaseDate: new Date(dto.releaseDate),
-      releaseStartDate: dto.releaseStartDate ? new Date(dto.releaseStartDate) : undefined,
-      releaseEndDate: dto.releaseEndDate ? new Date(dto.releaseEndDate) : undefined,
+      releaseStartDate: dto.releaseStartDate
+        ? new Date(dto.releaseStartDate)
+        : undefined,
+      releaseEndDate: dto.releaseEndDate
+        ? new Date(dto.releaseEndDate)
+        : undefined,
       type: dto.type,
       director: { id: dto.directorId } as Director,
       genre: { id: dto.genreId } as Genre,

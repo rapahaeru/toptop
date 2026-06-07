@@ -1,3 +1,4 @@
+import { jest, expect, describe, it, beforeEach } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,12 +20,12 @@ const makeEpisode = (overrides: Partial<Episode> = {}): Episode =>
     id: 1,
     title: 'Pegasus! A Armadura do Herói Lendário',
     broadcastedDate: mockDate,
-    series: { id: 1 } as any,
-    animationDirector: { id: 1 } as any,
-    script: { id: 1 } as any,
-    storyboard: { id: 1 } as any,
-    createdBy: { id: 1 } as any,
-    updatedBy: { id: 1 } as any,
+    series: { id: 1 } as Episode['series'],
+    animationDirector: { id: 1 } as Episode['animationDirector'],
+    script: { id: 1 } as Episode['script'],
+    storyboard: { id: 1 } as Episode['storyboard'],
+    createdBy: { id: 1 } as Episode['createdBy'],
+    updatedBy: { id: 1 } as Episode['updatedBy'],
     createdTime: mockDate,
     updatedTime: mockDate,
     ...overrides,
@@ -166,8 +167,8 @@ describe('EpisodesService', () => {
 
     it('should use the provided userId', async () => {
       const built = makeEpisode({
-        createdBy: { id: 7 } as any,
-        updatedBy: { id: 7 } as any,
+        createdBy: { id: 7 } as Episode['createdBy'],
+        updatedBy: { id: 7 } as Episode['updatedBy'],
       });
       jest.spyOn(repo, 'create').mockReturnValue(built);
       jest.spyOn(repo, 'save').mockResolvedValueOnce(built);

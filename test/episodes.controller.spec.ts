@@ -1,3 +1,4 @@
+import { jest, expect, describe, it, beforeEach } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,12 +21,12 @@ const makeEpisode = (overrides: Partial<Episode> = {}): Episode =>
     id: 1,
     title: 'Pegasus! A Armadura do Herói Lendário',
     broadcastedDate: mockDate,
-    series: { id: 1 } as any,
-    animationDirector: { id: 1 } as any,
-    script: { id: 1 } as any,
-    storyboard: { id: 1 } as any,
-    createdBy: { id: 1 } as any,
-    updatedBy: { id: 1 } as any,
+    series: { id: 1 } as Episode['series'],
+    animationDirector: { id: 1 } as Episode['animationDirector'],
+    script: { id: 1 } as Episode['script'],
+    storyboard: { id: 1 } as Episode['storyboard'],
+    createdBy: { id: 1 } as Episode['createdBy'],
+    updatedBy: { id: 1 } as Episode['updatedBy'],
     createdTime: mockDate,
     updatedTime: mockDate,
     ...overrides,
@@ -59,7 +60,10 @@ describe('EpisodesController', () => {
 
   describe('list', () => {
     it('should return episodes with default limit and offset', async () => {
-      const mockData = [makeEpisode(), makeEpisode({ id: 2, title: 'Episódio 2' })];
+      const mockData = [
+        makeEpisode(),
+        makeEpisode({ id: 2, title: 'Episódio 2' }),
+      ];
       jest.spyOn(repo, 'find').mockResolvedValueOnce(mockData);
 
       const result = await controller.list(undefined, undefined, undefined);

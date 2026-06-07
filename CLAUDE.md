@@ -52,7 +52,6 @@ O usuário está aprendendo backend e DevOps — priorize clareza e estrutura ex
 | `Storyboard` | `storyboard` | `storyboards` | pronto |
 | `Series` | `series` | `series` | pronto |
 | `Episode` | `episode` | `episodes` | pronto |
-| `Constellation` | `constellations` | `constellations` | **temporária — remover** |
 
 ## O que NÃO fazer
 

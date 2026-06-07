@@ -198,16 +198,6 @@ CREATE TABLE IF NOT EXISTS `episode` (
   CONSTRAINT `fk_episode_storyboard`         FOREIGN KEY (`storyboard_id`)        REFERENCES `storyboard`        (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- -----------------------------------------------------
--- constellations (temporária — será removida futuramente)
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `constellations` (
-  `id`         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `name`       VARCHAR(100) NOT NULL UNIQUE,
-  `type`       ENUM('ZODIAC','BRONZE','SILVER','GOLD','OTHER') NOT NULL DEFAULT 'OTHER',
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

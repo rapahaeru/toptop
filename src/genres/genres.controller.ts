@@ -6,10 +6,19 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { GenresService } from './genres.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateGenreDto } from './dto/create-genre.dto';
+import { GenresService } from './genres.service';
 
 @ApiTags('genres')
 @Controller('genres')
@@ -31,9 +40,11 @@ export class GenresController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria gênero' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateGenreDto) {
-    return this.service.create(dto);
+  create(@Body() dto: CreateGenreDto, @CurrentUser('sub') userId: number) {
+    return this.service.create(dto, userId);
   }
 }

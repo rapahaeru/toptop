@@ -6,10 +6,19 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { DirectorsService } from './directors.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateDirectorDto } from './dto/create-director.dto';
+import { DirectorsService } from './directors.service';
 
 @ApiTags('directors')
 @Controller('directors')
@@ -31,9 +40,11 @@ export class DirectorsController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria diretor' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateDirectorDto) {
-    return this.service.create(dto);
+  create(@Body() dto: CreateDirectorDto, @CurrentUser('sub') userId: number) {
+    return this.service.create(dto, userId);
   }
 }

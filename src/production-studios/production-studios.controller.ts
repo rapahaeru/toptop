@@ -6,10 +6,19 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ProductionStudiosService } from './production-studios.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateProductionStudioDto } from './dto/create-production-studio.dto';
+import { ProductionStudiosService } from './production-studios.service';
 
 @ApiTags('production-studios')
 @Controller('production-studios')
@@ -31,9 +40,14 @@ export class ProductionStudiosController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria estúdio de produção' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateProductionStudioDto) {
-    return this.service.create(dto);
+  create(
+    @Body() dto: CreateProductionStudioDto,
+    @CurrentUser('sub') userId: number,
+  ) {
+    return this.service.create(dto, userId);
   }
 }

@@ -6,8 +6,17 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SeriesService } from './series.service';
 import { CreateSeriesDto } from './dto/create-series.dto';
 
@@ -31,9 +40,11 @@ export class SeriesController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria série' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateSeriesDto) {
-    return this.service.create(dto);
+  create(@Body() dto: CreateSeriesDto, @CurrentUser('sub') userId: number) {
+    return this.service.create(dto, userId);
   }
 }

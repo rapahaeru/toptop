@@ -6,10 +6,19 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { BroadcastersService } from './broadcasters.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateBroadcasterDto } from './dto/create-broadcaster.dto';
+import { BroadcastersService } from './broadcasters.service';
 
 @ApiTags('broadcasters')
 @Controller('broadcasters')
@@ -31,9 +40,14 @@ export class BroadcastersController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria emissora' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateBroadcasterDto) {
-    return this.service.create(dto);
+  create(
+    @Body() dto: CreateBroadcasterDto,
+    @CurrentUser('sub') userId: number,
+  ) {
+    return this.service.create(dto, userId);
   }
 }

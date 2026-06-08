@@ -13,8 +13,9 @@ export class StoryboardsService {
   ) {}
 
   list(limit = 50, offset = 0) {
+    const safeLimit = Math.min(limit, 100);
     return this.repo.find({
-      take: limit,
+      take: safeLimit,
       skip: offset,
       order: { name: 'ASC' },
     });

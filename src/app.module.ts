@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AnimationDirectorsModule } from './animation-directors/animation-directors.module';
+import { AuthModule } from './auth/auth.module';
 import { BroadcastersModule } from './broadcasters/broadcasters.module';
 import { DirectorsModule } from './directors/directors.module';
 import { EpisodesModule } from './episodes/episodes.module';
@@ -33,6 +34,8 @@ import { UsersModule } from './users/users.module';
         DB_PASSWORD: Joi.string().required(),
         DB_CHARSET: Joi.string().default('utf8mb4'),
         DB_COLLATION: Joi.string().default('utf8mb4_unicode_ci'),
+        JWT_ACCESS_SECRET: Joi.string().required(),
+        JWT_REFRESH_SECRET: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -55,6 +58,7 @@ import { UsersModule } from './users/users.module';
         logging: config.get('NODE_ENV') !== 'production',
       }),
     }),
+    AuthModule,
     HealthModule,
     UsersModule,
     DirectorsModule,

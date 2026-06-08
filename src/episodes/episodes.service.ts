@@ -17,9 +17,10 @@ export class EpisodesService {
   ) {}
 
   list(limit = 50, offset = 0, seriesId?: number) {
+    const safeLimit = Math.min(limit, 100);
     return this.repo.find({
       where: seriesId ? { series: { id: seriesId } } : {},
-      take: limit,
+      take: safeLimit,
       skip: offset,
       order: { id: 'ASC' },
       relations: ['series', 'animationDirector', 'script', 'storyboard'],

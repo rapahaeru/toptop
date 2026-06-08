@@ -1,8 +1,9 @@
+import { Exclude } from 'class-transformer';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -26,8 +27,16 @@ export class User {
   @Column({ unique: true, nullable: true })
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
-}
 
-// Corrigindo formatação no final do arquivo
+  @Exclude()
+  @Column({
+    name: 'refresh_token',
+    type: 'varchar',
+    length: 512,
+    nullable: true,
+  })
+  refreshToken?: string | null;
+}

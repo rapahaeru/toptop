@@ -144,7 +144,7 @@ describe('EpisodesController', () => {
       jest.spyOn(repo, 'create').mockReturnValue(built);
       jest.spyOn(repo, 'save').mockResolvedValueOnce(built);
 
-      const result = await controller.create(dto);
+      const result = await controller.create(dto, 1);
 
       expect(result).toEqual(built);
       expect(mockRepository.save).toHaveBeenCalled();

@@ -6,8 +6,17 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { StoryboardsService } from './storyboards.service';
 import { CreateStoryboardDto } from './dto/create-storyboard.dto';
 
@@ -31,9 +40,11 @@ export class StoryboardsController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria storyboarder' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateStoryboardDto) {
-    return this.service.create(dto);
+  create(@Body() dto: CreateStoryboardDto, @CurrentUser('sub') userId: number) {
+    return this.service.create(dto, userId);
   }
 }

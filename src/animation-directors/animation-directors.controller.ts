@@ -6,8 +6,17 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AnimationDirectorsService } from './animation-directors.service';
 import { CreateAnimationDirectorDto } from './dto/create-animation-director.dto';
 
@@ -31,9 +40,14 @@ export class AnimationDirectorsController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria diretor de animação' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateAnimationDirectorDto) {
-    return this.service.create(dto);
+  create(
+    @Body() dto: CreateAnimationDirectorDto,
+    @CurrentUser('sub') userId: number,
+  ) {
+    return this.service.create(dto, userId);
   }
 }

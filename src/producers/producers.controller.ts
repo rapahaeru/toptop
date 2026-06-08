@@ -6,10 +6,19 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ProducersService } from './producers.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateProducerDto } from './dto/create-producer.dto';
+import { ProducersService } from './producers.service';
 
 @ApiTags('producers')
 @Controller('producers')
@@ -31,9 +40,11 @@ export class ProducersController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria produtora' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateProducerDto) {
-    return this.service.create(dto);
+  create(@Body() dto: CreateProducerDto, @CurrentUser('sub') userId: number) {
+    return this.service.create(dto, userId);
   }
 }

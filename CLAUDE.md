@@ -28,9 +28,13 @@ O usuário está aprendendo backend e DevOps — priorize clareza e estrutura ex
 - Módulos exportam o service (`exports: [XxxService]`) para reuso futuro
 
 ### Autenticação
-- Autenticação JWT ainda não implementada
-- Temporariamente, `userId = 1` (usuário admin do seed) é usado como `createdBy`/`updatedBy`
-- Quando auth for implementado, substituir pelo usuário extraído do JWT guard
+- JWT implementado em `src/auth/` (AuthModule, AuthService, JwtStrategy, JwtRefreshStrategy)
+- Endpoints: `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`
+- Access token: 15 min (`JWT_ACCESS_SECRET`); Refresh token: 7 dias (`JWT_REFRESH_SECRET`) com rotação
+- Todos os endpoints `POST` de criação de entidades exigem `JwtAuthGuard` + `@CurrentUser('sub')`
+- `userId` vem do token JWT — o `userId = 1` hardcoded foi removido de todos os controllers
+- Refresh token é armazenado como bcrypt hash na coluna `refresh_token` da tabela `user`
+- `password` e `refreshToken` são excluídos das respostas via `@Exclude()` + `ClassSerializerInterceptor` global
 
 ### Banco de dados
 - Schema e seeds ficam em `mysql/init/` com prefixo numérico (`001_schema.sql`, `002_seed_user.sql`, ...)

@@ -6,8 +6,17 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ScriptsService } from './scripts.service';
 import { CreateScriptDto } from './dto/create-script.dto';
 
@@ -31,9 +40,11 @@ export class ScriptsController {
     return this.service.findById(id);
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria roteirista' })
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateScriptDto) {
-    return this.service.create(dto);
+  create(@Body() dto: CreateScriptDto, @CurrentUser('sub') userId: number) {
+    return this.service.create(dto, userId);
   }
 }

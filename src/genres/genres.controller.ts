@@ -16,7 +16,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { GenresService } from './genres.service';
 
@@ -42,7 +44,8 @@ export class GenresController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria gênero' })
-  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   create(@Body() dto: CreateGenreDto, @CurrentUser('sub') userId: number) {
     return this.service.create(dto, userId);

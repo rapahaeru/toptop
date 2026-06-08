@@ -39,4 +39,7 @@ export class User {
     nullable: true,
   })
   refreshToken?: string | null;
+
+  @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
+  role: string;
 }

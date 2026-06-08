@@ -26,7 +26,7 @@ export class UsersService {
   findOneWithRefreshToken(id: number): Promise<User | null> {
     return this.userRepository.findOne({
       where: { id },
-      select: { id: true, username: true, refreshToken: true },
+      select: { id: true, username: true, refreshToken: true, role: true },
     });
   }
 

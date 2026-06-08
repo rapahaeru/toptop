@@ -16,7 +16,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { StoryboardsService } from './storyboards.service';
 import { CreateStoryboardDto } from './dto/create-storyboard.dto';
 
@@ -42,7 +44,8 @@ export class StoryboardsController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria storyboarder' })
-  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   create(@Body() dto: CreateStoryboardDto, @CurrentUser('sub') userId: number) {
     return this.service.create(dto, userId);

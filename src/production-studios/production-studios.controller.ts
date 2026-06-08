@@ -16,7 +16,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { CreateProductionStudioDto } from './dto/create-production-studio.dto';
 import { ProductionStudiosService } from './production-studios.service';
 
@@ -42,7 +44,8 @@ export class ProductionStudiosController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria estúdio de produção' })
-  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   create(
     @Body() dto: CreateProductionStudioDto,

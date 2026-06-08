@@ -16,7 +16,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { CreateBroadcasterDto } from './dto/create-broadcaster.dto';
 import { BroadcastersService } from './broadcasters.service';
 
@@ -42,7 +44,8 @@ export class BroadcastersController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria emissora' })
-  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   create(
     @Body() dto: CreateBroadcasterDto,

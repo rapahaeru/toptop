@@ -16,7 +16,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { ScriptsService } from './scripts.service';
 import { CreateScriptDto } from './dto/create-script.dto';
 
@@ -42,7 +44,8 @@ export class ScriptsController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Cria roteirista' })
-  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   create(@Body() dto: CreateScriptDto, @CurrentUser('sub') userId: number) {
     return this.service.create(dto, userId);
